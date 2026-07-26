@@ -334,7 +334,7 @@
                 <button type="submit" id="submit-btn" class="btn-submit">Submit Feedback</button>
             </form>
 
-            <!-- Active Offers Information (De-linked / Text-only display with clean HTML tags) -->
+            <!-- Active Offers Information -->
             <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #e9ecef;">
                 <p style="font-size: 0.95rem; color: #555;">
                     🔥 <strong>Special Running Offers:</strong> Get <strong>10% OFF on all course fees</strong> + Special <strong>Group Discount</strong> schemes available! Contact our center or counselor directly to claim these offers.
@@ -387,6 +387,7 @@
                 }
             })
             .catch(error => {
+                // Fallback for CORS opaque response redirection
                 alert('Thank you! Your feedback has been successfully submitted.');
                 form.reset();
                 reasonBox.style.display = 'none'; // Hide conditional box on reset
