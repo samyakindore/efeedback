@@ -152,6 +152,17 @@
             box-shadow: 0 0 0 3px rgba(13,110,253,0.2);
         }
 
+        /* Conditional Section Styling */
+        .conditional-box {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
         /* Star Rating UI */
         .rating-container {
             background: #f8fafc;
@@ -271,21 +282,35 @@
                         <input type="text" id="counselor-name" name="counselorname" placeholder="Name of counselor who assisted you">
                     </div>
 
-                    <!-- Enquiry Timing Context -->
-                    <div class="form-group">
-                        <label for="enquiry-timing">Enquiry / Response Context</label>
-                        <select id="enquiry-timing" name="enquirytiming">
-                            <option value="" disabled selected>Select Context</option>
-                            <option value="Regular Center Visit / Walk-in">Regular Center Visit / Walk-in</option>
-                            <option value="Telephonic / WhatsApp Support">Telephonic / WhatsApp Support</option>
-                            <option value="Follow-up Support Session">Follow-up Support Session</option>
-                        </select>
-                    </div>
-
                 </div>
 
                 <div class="form-grid">
                     
+                    <!-- Joining Intention Question -->
+                    <div class="form-group full-width">
+                        <label for="will-join">Will you be joining Samyak Computer Classes? *</label>
+                        <select id="will-join" name="willjoin" required>
+                            <option value="" disabled selected>Select Option</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Maybe / Undecided">Maybe / Undecided</option>
+                        </select>
+                    </div>
+
+                    <!-- Conditional Reason Popup Box (Appears if 'No' is selected) -->
+                    <div class="form-group full-width conditional-box" id="reason-box">
+                        <label for="joining-reason">Please specify the reason for not joining: *</label>
+                        <select id="joining-reason" name="joiningreason">
+                            <option value="" disabled selected>Select Reason</option>
+                            <option value="Course fees issues">Course fees issues</option>
+                            <option value="No proper counseling">No proper counseling</option>
+                            <option value="No desired course available">No desired course available</option>
+                            <option value="Timing or location issue">Timing or location issue</option>
+                            <option value="Joined somewhere else">Joined somewhere else</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
                     <!-- Comments / Suggestions -->
                     <div class="form-group full-width">
                         <label for="feedback-comments">Comments / Suggestions / Queries</label>
@@ -294,7 +319,7 @@
 
                 </div>
 
-                <!-- Star Rating Section (Moved to last, right above submit button) -->
+                <!-- Star Rating Section (Last, right above submit button) -->
                 <div class="rating-container">
                     <label>How satisfied were you with the counseling and guidance provided? *</label>
                     <div class="star-rating">
@@ -322,6 +347,21 @@
     <script>
         const form = document.getElementById('feedback-form');
         const submitBtn = document.getElementById('submit-btn');
+        const willJoinSelect = document.getElementById('will-join');
+        const reasonBox = document.getElementById('reason-box');
+        const joiningReasonSelect = document.getElementById('joining-reason');
+
+        // Toggle conditional reason dropdown based on selection
+        willJoinSelect.addEventListener('change', function() {
+            if (this.value === 'No') {
+                reasonBox.style.display = 'block';
+                joiningReasonSelect.setAttribute('required', 'required');
+            } else {
+                reasonBox.style.display = 'none';
+                joiningReasonSelect.removeAttribute('required');
+                joiningReasonSelect.value = '';
+            }
+        });
 
         form.addEventListener('submit', function(e) {
             e.preventDefault(); 
@@ -341,6 +381,7 @@
                 if (data.result === 'success') {
                     alert('Thank you! Your feedback has been successfully recorded.');
                     form.reset();
+                    reasonBox.style.display = 'none'; // Hide conditional box on reset
                 } else {
                     alert('Error saving record: ' + (data.error || 'Please try again.'));
                 }
@@ -348,6 +389,7 @@
             .catch(error => {
                 alert('Thank you! Your feedback has been successfully submitted.');
                 form.reset();
+                reasonBox.style.display = 'none'; // Hide conditional box on reset
             })
             .finally(() => {
                 submitBtn.textContent = "Submit Feedback";
